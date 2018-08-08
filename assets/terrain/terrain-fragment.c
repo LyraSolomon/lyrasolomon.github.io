@@ -1,44 +1,46 @@
-#version 300 es
 precision lowp float;
 precision lowp int;
 
-in lowp vec4 passPosition;
-in lowp vec4 passEye;
-in lowp float passGround;
-out vec4 fragColor;
+varying lowp vec4 passPosition;
+varying lowp vec4 passEye;
+varying lowp float passGround;
 
-uniform int p[512];
 uniform float gainGround;
 uniform float gainSky;
 uniform float expSky;
 uniform float expStars;
 uniform float ampGround;
+uniform float seed;
 uniform vec3 lightDirection;
 
 float fade(float x) {
   return x * x * x * (x * (x * 6. - 15.) + 10.);
 }
 
-float grad2(int hash, float x, float y) {
-  switch (hash & 3) {
-    case  0: return  x + y;
-    case  1: return -x + y;
-    case  2: return  x - y;
-    case  3: return -x - y;
+float grad2(float xi, float yi, float xf, float yf) {
+  float retval = 0.;
+  if (fract(sin(fract(sin(xi)*seed)+yi)*seed) > .5) {
+    retval += xf;
+  } else {
+    retval -= xf;
   }
-  return 0.;
+  if (fract(sin(fract(sin(yi)*seed)+xi)*seed) > .5) {
+    retval += yf;
+  } else {
+    retval -= yf;
+  }
+  return retval;
 }
 
 float perlin2(vec2 a) {
-  int xi = int(floor(a.x)) & 255;
-  int yi = int(floor(a.y)) & 255;
-  vec2 f = a - floor(a);
+  vec2 i = floor(a);
+  vec2 f = a - i;
   float u = fade(f.x);
   float v = fade(f.y);
-  return mix(mix(grad2(p[p[xi  ]+yi  ], f.x   , f.y   ),
-                 grad2(p[p[xi+1]+yi  ], f.x-1., f.y   ), u),
-             mix(grad2(p[p[xi  ]+yi+1], f.x   , f.y-1.),
-                 grad2(p[p[xi+1]+yi+1], f.x-1., f.y-1.), u), v) * 0.5 + 0.5;
+  return mix(mix(grad2(i.x   , i.y   , f.x   , f.y   ),
+                 grad2(i.x+1., i.y   , f.x-1., f.y   ), u),
+             mix(grad2(i.x   , i.y+1., f.x   , f.y-1.),
+                 grad2(i.x+1., i.y+1., f.x-1., f.y-1.), u), v) * 0.5 + 0.5;
 }
 
 vec3 dperlin2(vec2 a) {
@@ -52,7 +54,7 @@ float perlin8va2(vec2 a, float gain) {
   float retval = 0.;
   float amp = 1.;
   float freq = 1.;
-  for (int i = 0; i < 15; i++) {
+  for (int i = 0; i < 10; i++) {
     retval += amp * perlin2(a * freq);
     freq *= 2.;
     amp *= gain;
@@ -76,7 +78,7 @@ void main() {
     vec3 normal = normalize(vec3(-noise.y, 1., -noise.z));
     float lighting = max(dot(-lightDirection, normal), 0.) + 0.2;
     vec3 color = mix(vec3(0.7), vec3(0., 0.7, 0.), max(min(normal.y * 1.2 - noise.x * .8, 1.), 0.));
-    fragColor = vec4(mix(skyColor, color * lighting * lightColor, 1. - distance / 9.), 1.);
+    gl_FragColor = vec4(mix(skyColor, color * lighting * lightColor, 1. - distance / 9.), 1.);
   } else {
     float cloud = perlin8va2(passPosition.xz, gainSky) / 2. * (1. - gainSky * .8);
     cloud = pow(cloud, expSky) * 2.0;
@@ -88,6 +90,6 @@ void main() {
       float star = max(pow(perlin2(passPosition.xz * 100.), exp(expStars)) - dot(skyColor, vec3(1.)) - .3, 0.);
       color = mix(skyColor + vec3(star), vec3(.9, .9, .9) * lightColor, cloud);
     }
-    fragColor = vec4(mix(skyColor, color, max((passPosition.y + 0.5) * .5, 0.)), 1.);
+    gl_FragColor = vec4(mix(skyColor, color, max((passPosition.y + 0.5) * .5, 0.)), 1.);
   }
 }

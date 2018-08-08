@@ -6,13 +6,13 @@ function setupGl(canvasId, vertexName, fragmentName, continuation) {
     console.error("No HTML element has id " + id);
     return;
   }
-  const gl = canvas.getContext("webgl2");
+  const gl = canvas.getContext("webgl");
   if (!gl) {
     if (!hasWarnedNoGl) {
       hasWarnedNoGl = true;
-      alert("WebGL 2 (OpenGL ES 3.0) is not available on your device");
+      alert("WebGL is not available on your device");
     }
-    console.error("Either the element with id " + id + " is not a canvas or webgl2 is not supported");
+    console.error("Either the element with id " + id + " is not a canvas or webgl is not supported");
     return;
   }
 

@@ -1,10 +1,12 @@
 var update;
 const fov = 65.0 * Math.PI / 180.0;
 const range = 8.;
-const steps = 400;
+const steps = 100;
+var loadingMsg;
 
-function mkTerrain(id) {
+function mkTerrain(id, loadingId) {
   var urlGet = {};
+  loadingMsg = document.getElementById(loadingId);
   if(document.location.toString().indexOf('?') !== -1) {
     var query = document.location
         .toString()
@@ -24,20 +26,19 @@ function mkTerrain(id) {
       document.getElementById(i).value = urlGet[i];
     }
   }
-  setupGl(id, "/assets/terrain/terrain-vertex.c", "/assets/terrain/terrain-fragment.c", drawTerrain);
+  var idInner = id + "-inner";
+  document.getElementById(id).innerHTML = '<canvas id="'+idInner+'" width="720" height="480" z-index="0">HTML5 not supported!</canvas>';
+  document.getElementById(idInner).width = document.getElementById(id).offsetWidth;
+  document.getElementById(idInner).height = document.getElementById(id).offsetHeight;
+  loadingMsg.innerHTML += "<br/>Building shaders";
+  setupGl(idInner, "/assets/terrain/terrain-vertex.c", "/assets/terrain/terrain-fragment.c", drawTerrain);
 }
 
 function drawTerrain(gl, shader) {
-  var permutation = [];
-  for (var i = 0; i < 256; i++) {
-    permutation.push(i);
-  }
-  shuffle(permutation);
-  permutation = permutation.concat(permutation);
   const bufs = initBufs(gl);
   gl.useProgram(shader.program);
-  gl.uniform1iv(gl.getUniformLocation(shader.program, "p"), permutation);
   const season = Math.random() - 0.5;
+  const seed = Math.random() * 100000;
   update = function() {
     var v = vec3.fromValues(Math.sin(document.getElementById("time").valueAsNumber * Math.PI * 2. / 24.),
                             Math.cos(document.getElementById("time").valueAsNumber * Math.PI * 2. / 24.), season);
@@ -48,9 +49,14 @@ function drawTerrain(gl, shader) {
     gl.uniform1f(gl.getUniformLocation(shader.program, "ampGround"), document.getElementById("amp-ground").valueAsNumber);
     gl.uniform1f(gl.getUniformLocation(shader.program, "expSky"), document.getElementById("exp-sky").valueAsNumber);
     gl.uniform1f(gl.getUniformLocation(shader.program, "expStars"), document.getElementById("exp-stars").valueAsNumber);
+    gl.uniform1f(gl.getUniformLocation(shader.program, "seed"), seed);
     drawScene(gl, shader, bufs);
   };
-  update();
+  loadingMsg.innerHTML += "<br/>Sending buffers";
+  setTimeout(function() {
+    update();
+    loadingMsg.setAttribute("hidden", "hidden");
+  }, 50);
 }
 
 function drawScene(gl, programInfo, buffers) {
@@ -72,23 +78,16 @@ function drawScene(gl, programInfo, buffers) {
   drawModel(gl, programInfo, buffers.sky, 0, 0, 0, 0);
 }
 
-function shuffle(a) {
-  for (var i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-}
-
 function initBufs(gl) {
   var points = {};
-  const istep = Math.atan(range)/steps;
-  const jstep = fov*1.4/steps;
+  const istep = Math.atan(range*2)/steps*2.;
+  const jstep = fov*1.4/steps/2.;
   for (var i = 0; i < Math.atan(range); i += istep) {
     for (var j = -fov/1.4; j < fov/1.4; j += jstep) {
-      pushQuad(points, [Math.tan(i)*Math.sin(j), 0., -Math.tan(i)*Math.cos(j)],
-                       [Math.tan(i)*Math.sin(j+jstep), 0., -Math.tan(i)*Math.cos(j+jstep)],
-                       [Math.tan(i+istep)*Math.sin(j+jstep), 0., -Math.tan(i+istep)*Math.cos(j+jstep)],
-                       [Math.tan(i+istep)*Math.sin(j), 0., -Math.tan(i+istep)*Math.cos(j)],
+      pushQuad(points, [Math.tan(i)*Math.sin(j)/2, 0., -Math.tan(i)*Math.cos(j)/2],
+                       [Math.tan(i)*Math.sin(j+jstep)/2, 0., -Math.tan(i)*Math.cos(j+jstep)/2],
+                       [Math.tan(i+istep)*Math.sin(j+jstep)/2, 0., -Math.tan(i+istep)*Math.cos(j+jstep)/2],
+                       [Math.tan(i+istep)*Math.sin(j)/2, 0., -Math.tan(i+istep)*Math.cos(j)/2],
                        [1., 1., 1.]);
     }
   }

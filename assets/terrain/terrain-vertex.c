@@ -1,47 +1,50 @@
-#version 300 es
 precision lowp float;
 precision lowp int;
 
-in vec4 vertexPosition;
-in vec4 vertexColor;
-in vec3 vertexNormal;
+attribute vec4 vertexPosition;
+attribute vec4 vertexColor;
+attribute vec3 vertexNormal;
 
 uniform mat4 modelView;
 uniform mat4 projection;
 uniform mat4 observer;
 
-out lowp vec4 passPosition;
-out lowp vec4 passEye;
-out lowp float passGround;
+varying lowp vec4 passPosition;
+varying lowp vec4 passEye;
+varying lowp float passGround;
 
-uniform int p[512];
 uniform float gainGround;
 uniform float ampGround;
+uniform float seed;
 
 float fade(float x) {
   return x * x * x * (x * (x * 6. - 15.) + 10.);
 }
 
-float grad2(int hash, float x, float y) {
-  switch (hash & 3) {
-    case  0: return  x + y;
-    case  1: return -x + y;
-    case  2: return  x - y;
-    case  3: return -x - y;
+float grad2(float xi, float yi, float xf, float yf) {
+  float retval = 0.;
+  if (fract(sin(fract(sin(xi)*seed)+yi)*seed) > .5) {
+    retval += xf;
+  } else {
+    retval -= xf;
   }
-  return 0.;
+  if (fract(sin(fract(sin(yi)*seed)+xi)*seed) > .5) {
+    retval += yf;
+  } else {
+    retval -= yf;
+  }
+  return retval;
 }
 
 float perlin2(vec2 a) {
-  int xi = int(floor(a.x)) & 255;
-  int yi = int(floor(a.y)) & 255;
-  vec2 f = a - floor(a);
+  vec2 i = floor(a);
+  vec2 f = a - i;
   float u = fade(f.x);
   float v = fade(f.y);
-  return mix(mix(grad2(p[p[xi  ]+yi  ], f.x   , f.y   ),
-                 grad2(p[p[xi+1]+yi  ], f.x-1., f.y   ), u),
-             mix(grad2(p[p[xi  ]+yi+1], f.x   , f.y-1.),
-                 grad2(p[p[xi+1]+yi+1], f.x-1., f.y-1.), u), v) * 0.5 + 0.5;
+  return mix(mix(grad2(i.x   , i.y   , f.x   , f.y   ),
+                 grad2(i.x+1., i.y   , f.x-1., f.y   ), u),
+             mix(grad2(i.x   , i.y+1., f.x   , f.y-1.),
+                 grad2(i.x+1., i.y+1., f.x-1., f.y-1.), u), v) * 0.5 + 0.5;
 }
 
 float perlin8va2(vec2 a, float gain) {

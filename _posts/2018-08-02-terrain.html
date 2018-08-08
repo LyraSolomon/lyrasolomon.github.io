@@ -10,40 +10,47 @@ subtitle: "Procedurally generating pretty pictures"
 <script src="/assets/gl_utils.js"></script>
 <script src="/assets/third_party/gl-matrix.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
-<canvas id="mountain" width="720" height="480">HTML5 not supported!</canvas>
+<div style="position:relative">
+  <div style="width:100%; padding-bottom:66.7%">
+    <div style="top:0; left:0; bottom:0; right:0; position:absolute" id="mountain"></div>
+  </div>
+  <div id="loading" style="position:absolute; top:0; left:0" z-index="1">
+    Loading, please wait
+  </div>
+</div>
 
 <form method="GET">
   <table>
     <tr>
       <td><label for="gain-ground">Ground Noise Gain</label></td>
-      <td>0.0<input type="range" min="0.0" max="0.8" step="any" onchange="update()" id="gain-ground" name="gain-ground" />0.8</td>
+      <td>0.0<input type="range" min="0.0" max="0.8" step="any" oninput="update()" id="gain-ground" name="gain-ground" />0.8</td>
     </tr>
     <tr>
       <td><label for="amp-ground">Ground Amplitude</label></td>
-      <td>0.0<input type="range" min="0.0" max="3.0" step="any" onchange="update()" id="amp-ground" name="amp-ground" />3.0</td>
+      <td>0.0<input type="range" min="0.0" max="3.0" step="any" oninput="update()" id="amp-ground" name="amp-ground" />3.0</td>
     </tr>
     <tr>
       <td><label for="gain-sky">Cloud Noise Gain</label></td>
-      <td>0.0<input type="range" min="0.0" max="1.0" step="any" onchange="update()" id="gain-sky" name="gain-sky" />1.0</td>
+      <td>0.0<input type="range" min="0.0" max="1.0" step="any" oninput="update()" id="gain-sky" name="gain-sky" />1.0</td>
     </tr>
     <tr>
       <td><label for="exp-sky">Cloud Exponent</label></td>
-      <td>0.0<input type="range" min="0.0" max="3.0" step="any" onchange="update()" id="exp-sky" name="exp-sky" />3.0</td>
+      <td>0.0<input type="range" min="0.0" max="3.0" step="any" oninput="update()" id="exp-sky" name="exp-sky" />3.0</td>
     </tr>
     <tr>
       <td><label for="exp-stars">Star Exponent (log scale)</label></td>
-      <td>0.0<input type="range" min="0.0" max="5.0" step="any" onchange="update()" id="exp-stars" name="exp-stars" />150.0</td>
+      <td>0.0<input type="range" min="0.0" max="5.0" step="any" oninput="update()" id="exp-stars" name="exp-stars" />150.0</td>
     </tr>
     <tr>
       <td><label for="time">Time</label></td>
-      <td>2.0<input type="range" min="2.0" max="26.0" step="any" onchange="update()" id="time" name="time" />26.0</td>
+      <td>2.0<input type="range" min="2.0" max="26.0" step="any" oninput="update()" id="time" name="time" />26.0</td>
     </tr>
     <tr>
       <td colspan="2"><input type="submit" value="Regenerate & Share" /></td>
     </tr>
   </table>
 </form>
-<script>mkTerrain("mountain")</script>
+<script>mkTerrain("mountain", "loading")</script>
 
 <h2>Tell me more about the...</h2>
 
@@ -279,6 +286,9 @@ so the stars are hidden by clouds.</p>
   <li>The sky is not flat - further away from the viewer it's actually closer to the ground.</li>
   <li>The clouds fade away slower than the ground does to make the scene look deeper than it is.</li>
   <li>Stars are not round, especially if the <code>Star Exponent</code> is low.</li>
+  <li>Because GLSL doesn't support arbitrary array lookup, instead of using a shuffled array as
+    a source of pseudorandomness, this uses the slightly worse
+    <a href="https://thebookofshaders.com/10">sine-chopping method</a>.</li>
 </ul>
 
 <h3>Potential Improvements</h3>
