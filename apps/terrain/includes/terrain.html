@@ -1,0 +1,296 @@
+<script src="/terrain/terrain.js"></script>
+<script src="/gl_utils.js"></script>
+<script src="/third_party/gl-matrix.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+<div style="position:relative">
+  <div style="width:100%; padding-bottom:66.7%">
+    <div style="top:0; left:0; bottom:0; right:0; position:absolute" id="mountain"></div>
+  </div>
+  <div id="loading" style="position:absolute; top:0; left:0" z-index="1">
+    Loading, please wait
+  </div>
+</div>
+
+<form method="GET">
+  <table>
+    <tr>
+      <td><label for="gain-ground">Ground Noise Gain</label></td>
+      <td>0.0<input type="range" min="0.0" max="0.8" step="any" oninput="update()" id="gain-ground" name="gain-ground" />0.8</td>
+    </tr>
+    <tr>
+      <td><label for="amp-ground">Ground Amplitude</label></td>
+      <td>0.0<input type="range" min="0.0" max="3.0" step="any" oninput="update()" id="amp-ground" name="amp-ground" />3.0</td>
+    </tr>
+    <tr>
+      <td><label for="gain-sky">Cloud Noise Gain</label></td>
+      <td>0.0<input type="range" min="0.0" max="1.0" step="any" oninput="update()" id="gain-sky" name="gain-sky" />1.0</td>
+    </tr>
+    <tr>
+      <td><label for="exp-sky">Cloud Exponent</label></td>
+      <td>0.0<input type="range" min="0.0" max="3.0" step="any" oninput="update()" id="exp-sky" name="exp-sky" />3.0</td>
+    </tr>
+    <tr>
+      <td><label for="exp-stars">Star Exponent (log scale)</label></td>
+      <td>0.0<input type="range" min="0.0" max="5.0" step="any" oninput="update()" id="exp-stars" name="exp-stars" />150.0</td>
+    </tr>
+    <tr>
+      <td><label for="time">Time</label></td>
+      <td>2.0<input type="range" min="2.0" max="26.0" step="any" oninput="update()" id="time" name="time" />26.0</td>
+    </tr>
+    <tr>
+      <td colspan="2"><input type="submit" value="Regenerate & Share" /></td>
+    </tr>
+  </table>
+</form>
+<script>mkTerrain("mountain", "loading")</script>
+
+<h2>Tell me more about the...</h2>
+
+<h3>Colors and Lighting</h3>
+
+<p>\(\mathrm{intensity}=-\mathrm{direction}_\mathrm{light}\cdot\mathrm{normal}\)</p>
+<svg width="240" height="140" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="60" cy="80" r="55" stroke="black" fill="none" />
+  <line x1="0" y1="20" x2="120" y2="140" stroke="black" />
+  <line x1="60" y1="25" x2="60" y2="80" stroke="black" />
+  <polygon points="60,80 58,75 62,75" stroke="black" fill="black" />
+  <text x="60" y="20" fill="black">Incoming light</text>
+  <line x1="99" y1="41" x2="60" y2="80" stroke="black" />
+  <polygon points="99,41 94,43 97,46" stroke="black" fill="black" />
+  <text x="100" y="40" fill="black">Normal of surface</text>
+  <line x1="99" y1="41" x2="60" y2="41" stroke="black" stroke-dasharray="4" />
+  <line x1="99" y1="80" x2="60" y2="80" stroke="black" stroke-dasharray="4" />
+  <line x1="99" y1="41" x2="99" y2="80" stroke="black" />
+  <text x="105" y="65" fill="black">Lighting strength</text>
+</svg>
+<p>For something rough like stone or trees, assume the light is scattered equally in all directions.
+In that case, the brightness is proportional to how "densely" the incoming rays hit the surface.</p>
+
+<p>\(\mathrm{color}_\mathrm{out}=\mathrm{color}_\mathrm{surface}\circ\mathrm{color}_\mathrm{light}\mathrm{intensity}\)</p>
+<svg width="480" height="120" xmlns="http://www.w3.org/2000/svg">
+  <polygon points="10,0 40,100 80,100" stroke="none" fill="#FF0000" />
+  <polygon points="10,100 110,100 110,119 10,119" stroke="black" fill="#FFFFFF" />
+  <polygon points="40,100 80,100 80,119 40,119" stroke="black" fill="#FF0000" />
+
+  <polygon points="130,0 160,100 200,100" stroke="none" fill="#00FF00" />
+  <polygon points="130,100 230,100 230,119 130,119" stroke="black" fill="#FF0000" />
+  <polygon points="160,100 200,100 200,119 160,119" stroke="black" fill="#000000" />
+
+  <polygon points="250,0 280,100 320,100" stroke="none" fill="#FF0000" />
+  <polygon points="250,100 350,100 350,119 250,119" stroke="black" fill="#FF0000" />
+  <polygon points="280,100 320,100 320,119 280,119" stroke="black" fill="#FF0000" />
+
+  <polygon points="370,0 400,100 440,100" stroke="none" fill="#808080" />
+  <polygon points="370,100 470,100 470,119 370,119" stroke="black" fill="#808080" />
+  <polygon points="400,100 440,100 440,119 400,119" stroke="black" fill="#404040" />
+</svg>
+<p>For each RGB channel, multiply the surface and scaled light values together. That's all there is to it!</p>
+
+<p>So then what are the surface and light colors?</p>
+
+<p>The surface is stone when it is higher in elevation and sloped, and vegetation when it is lower and flatter.</p>
+<svg width="180" height="80" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ground" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#B3B3B3" />
+      <stop offset="100%" stop-color="#00B300" />
+    </linearGradient>
+  </defs>
+  <rect x="1" y="30" width="178" height="20" stroke="black" fill="url(#ground)" />
+  <line x1="1" y1="10" x2="1" y2="50" stroke="black" />
+  <line x1="179" y1="30" x2="179" y2="70" stroke="black" />
+  <text x="5" y="20" fill="black">Stone (0)</text>
+  <text x="175" y="70" fill="black" text-anchor="end">Vegetation (1)</text>
+</svg>
+<p>The precise equation it follows is \(1.2\cdot\mathrm{normal}_y-0.8\cdot\mathrm{elevation}\),
+although \(\mathrm{elevation}\) isn't particularly meaningful since it doesn't have well-defined units.</p>
+
+<p>The light and sky colors depend on the height of the sun in the sky.</p>
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8080FF" />
+      <stop offset="2.8%" stop-color="#7B7AFF" />
+      <stop offset="50%" stop-color="#331A26" />
+      <stop offset="62.5%" stop-color="#200020" />
+      <stop offset="83.3%" stop-color="#000015" />
+      <stop offset="100%" stop-color="#00000D" />
+    </linearGradient>
+    <linearGradient id="light" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="50%" stop-color="#663300" />
+      <stop offset="62.5%" stop-color="#400000" />
+      <stop offset="83.3%" stop-color="#000000" />
+      <stop offset="100%" stop-color="#000000" />
+    </linearGradient>
+    <linearGradient id="cloud-brightness" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#E6E6E6" />
+      <stop offset="50%" stop-color="#E6E6E6" />
+      <stop offset="100%" stop-color="#666666" />
+    </linearGRadient>
+    <linearGradient id="cloud-transparency" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="50%" stop-color="#000000" />
+      <stop offset="100%" stop-color="#000000" />
+    </linearGRadient>
+    <linearGradient id="star" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#000000" />
+      <stop offset="34.4%" stop-color="#000000" />
+      <stop offset="50%" stop-color="#404040" />
+      <stop offset="62.5%" stop-color="#737373" />
+      <stop offset="83.3%" stop-color="#9D9D9D" />
+      <stop offset="100%" stop-color="#A6A6A6" />
+    </linearGradient>
+  </defs>
+</svg>
+<svg width="240" height="120" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="60" cy="60" r="55" stroke="black" stroke-width="5" fill="none" />
+  <circle cx="60" cy="60" r="50" stroke="url(#light)" stroke-width="10" fill="none" />
+  <text x="60" y="60" fill="black" text-anchor="middle">Light</text>
+  <circle cx="180" cy="60" r="55" stroke="black" stroke-width="5" fill="none" />
+  <circle cx="180" cy="60" r="50" stroke="url(#sky)" stroke-width="10" fill="none" />
+  <text x="180" y="60" fill="black" text-anchor="middle">Sky</text>
+</svg>
+<p>\(\mathrm{light}=\begin{bmatrix}\max(0.6h+0.4,0.0)\\\max(0.8h+0.2,0.0)\\\max(h,0.0)\end{bmatrix}\)</p>
+<p>\(\mathrm{sky}=\begin{bmatrix}\max(0.3h+0.2,0.0)\\\max(0.4h+0.1,0.0)\\\max(0.8h,0.0)+0.1h+0.15\end{bmatrix}\)</p>
+<p>where \(h\) is between \(-1.0\) and \(1.0\).</p>
+
+<h3>Ground</h3>
+
+<p>This uses Improved Perlin Noise to compute the height, as well as basically everything else.
+The basic idea is that Perlin Noise is <em>coherent</em>, meaning that it continuous like a hill rather than
+discontinuous like static, and <em>procedural</em>, meaning that the value at each point can be calculated independently.</p>
+
+<p>Traditionally, Perlin Noise is explained as an interpolation of several dot products, which is useful as an
+implementation guide but not so much for seeing how it works. If you want to learn more about it in that context, you should check out
+<a href="https://flafla2.github.io/2014/08/09/perlinnoise.html">this</a>,
+<a href="https://mzucker.github.io/html/perlin-noise-math-faq.html">this</a>, and
+<a href="http://www.scratchapixel.com/lessons/procedural-generation-virtual-worlds/perlin-noise-part-2">this</a>.
+Instead, this article will provide a more visual description.</p>
+
+<p>To start with, the space is divided into cells. At each lattice point, a random vector is chosen,
+which affects the four cells it is a part of. In the Improved Perlin Noise, there are only four vectors
+to choose from, but in the original there are infinitely many. Each vector creates a rotation of the
+same shape, shown in the animation below. When the shapes from each lattice point are added together, a smooth random-looking
+pattern is obtained. To see what it looks like, set the <code>Ground Noise Gain</code> to \(0\).</p>
+
+<script src="/terrain/visualization.js"></script>
+<canvas id="vertex" width="480" height="120">HTML5 not supported!</canvas>
+<script>mkVisualization("vertex", "vertex")</script>
+
+<p>If you tried that, you can tell it does not look remotely realistic. It's missing all the
+detail found in real life. To be realistic, the noise needs to be fractal noise. So what is that?</p>
+
+<p>Try listening to a note played on a piano, then a note as a sine wave. The difference is
+that the piano has <em>harmonics</em>, additional waves with higher frequency and lower amplitude.
+In music these are integer multiples of the base frequency, but in the terrain generator only
+power of two multiples are used, since they decrease faster and are therefore easier to compute.</p>
+
+<canvas id="wave-0" width="480" height="120">HTML5 not supported!"</canvas>
+<table>
+  <tr>
+    <td><label for="gain-wave">Gain (\(a\))</label></td>
+    <td>0.0<input type="range" min="0.0" max="1.0" step="any" oninput="plots['wave-0']()" id="gain-wave-0" />1.0</td>
+  </tr>
+</table>
+<script>mkVisualization("wave-0", "gain")</script>
+<p>\(y=\sum_{n=0}^\infty a^n\sin{(2^n x)}\)</p>
+
+<p>So this is how to create fractals out of a wave, but how is it done with noise? Does noise
+have frequency? If a bunch of hills are squeezed together it certainly looks different, so
+that would make sense. As it turns out, there's an easy stand-in for how close the hills are:
+how small the cells are. And that's exactly how it's done here.
+<p>\(y=\sum_{n=0}^\infty ka^n\mathrm{perlin}(2^n x, 2^n z)\)</p>
+
+<h3>Sky</h3>
+
+<p>Clouds are generally bunched together, but have soft edges. This means that the cloud density
+should be relatively smooth. Since that restriction eliminates a simple cutoff function, the next thing
+to try is a power function. It ends up looking reasonably good.</p>
+
+<canvas id="wave-1" width="480" height="120">HTML5 not supported!"</canvas>
+<table>
+  <tr>
+    <td><label for="exp-wave">Exponent (\(b\))</label></td>
+    <td>0.0<input type="range" min="0.0" max="3.0" step="any" oninput="plots['wave-1']()" id="exp-wave-0" />3.0</td>
+  </tr>
+</table>
+<script>mkVisualization("wave-1", "exp")</script>
+<p>\(y=(\frac{1}{2}\sin{x}+\frac{1}{2})^b\)</p>
+
+<p>Putting this together with the noise octaves gives the equation for cloud density.</p>
+
+<canvas id="wave-2" width="480" height="120">HTML5 not supported!"</canvas>
+<table>
+  <tr>
+    <td><label for="gain-wave">Gain (\(a\))</label></td>
+    <td>0.0<input type="range" min="0.0" max="1.0" step="any" oninput="plots['wave-2']()" id="gain-wave-1" />1.0</td>
+  </tr>
+  <tr>
+    <td><label for="exp-wave">Exponent (\(b\))</label></td>
+    <td>0.0<input type="range" min="0.0" max="3.0" step="any" oninput="plots['wave-2']()" id="exp-wave-1" />3.0</td>
+  </tr>
+</table>
+<script>mkVisualization("wave-2", "gain+exp")</script>
+<p>\(y=(\frac{1}{2}(\sum_{n=0}^\infty a^n\sin{(2^n x)})+\frac{1}{2})^b\)</p>
+<p>\(y=(\sum_{n=0}^\infty a^n\mathrm{perlin}(2^n x, 2^n z))^b\)</p>
+
+<p>The cloud density causes the color to fade from the sky color at density \(0.0\),
+to \(90\%\) of the light color at density \(0.5\), to \(40\%\) of the light color at density \(1.0\).</p>
+<svg width="200" height="140" xmlns="http://www.w3.org/2000/svg">
+  <mask id="brightness-mask">
+    <rect x="0" y="0" width="200" height="120" fill="url(#cloud-brightness)" />
+  </mask>
+  <mask id="transparency-mask">
+    <rect x="0" y="0" width="200" height="120" fill="url(#cloud-transparency)" />
+  </mask>
+  <rect x="0" y="0" width="200" height="120" fill="#000000" />
+  <rect x="0" y="0" width="200" height="120" fill="url(#light)" mask="url(#brightness-mask)" />
+  <rect x="0" y="0" width="200" height="120" fill="url(#sky)" mask="url(#transparency-mask)" />
+  <text x="0" y="135" fill="black" text-anchor="start">0.0</text>
+  <text x="100" y="135" fill="black" text-anchor="middle">Cloud Density</text>
+  <text x="200" y="135" fill="black" text-anchor="end">1.0</text>
+</svg>
+
+<p>In real life, the stars are always shining, but the sun is so much brighter that our eyes adjust
+and we can't see them. Computer screens don't adjust to things that are very bright; they cap the color
+and display white. Because of this, the model compensates internally by reducing the brightness of
+stars when it's lighter out.</p>
+<svg width="240" height="120" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="60" cy="60" r="55" stroke="black" stroke-width="5" fill="none" />
+  <circle cx="60" cy="60" r="50" stroke="url(#sky)" stroke-width="10" fill="none" />
+  <text x="60" y="60" fill="black" text-anchor="middle">Sky</text>
+  <circle cx="180" cy="60" r="55" stroke="black" stroke-width="5" fill="none" />
+  <circle cx="180" cy="60" r="50" stroke="url(#star)" stroke-width="10" fill="none" />
+  <text x="180" y="60" fill="black" text-anchor="middle">Stars</text>
+</svg>
+
+<p>\(y=\max(\mathrm{perlin}(100x, 100z)^b-\begin{bmatrix}1.0\\1.0\\1.0\end{bmatrix}\cdot\mathrm{color}_\mathrm{sky}-0.3,0.0)\)
+<p>The star color uses gain \(0\), and to get the correct brightness, the value is shifted
+down instead of scaled so the stars make distinct points. This value is added to the sky color,
+so the stars are hidden by clouds.</p>
+
+<p>Things further away from the viewer are blended in to the sky color.</p>
+
+<h3>Stuff I don't see</h3>
+<ul>
+  <li>Vertices are more densely packed closer to the viewer.</li>
+  <li>The sky is not flat - further away from the viewer it's actually closer to the ground.</li>
+  <li>The clouds fade away slower than the ground does to make the scene look deeper than it is.</li>
+  <li>Stars are not round, especially if the <code>Star Exponent</code> is low.</li>
+  <li>Because GLSL doesn't support arbitrary array lookup, instead of using a shuffled array as
+    a source of pseudorandomness, this uses the slightly worse
+    <a href="https://thebookofshaders.com/10">sine-chopping method</a>.</li>
+</ul>
+
+<h3>Potential Improvements</h3>
+<ul>
+  <li>The cloud density function can be improved.</li>
+  <li>More than one color of vegetation might look good.</li>
+  <li>Valleys are just as rough as mountains. Could be fixed by applying an
+    exponent to the elevation, but mountain ranges have multiple peaks and
+    the area shown might not be wide enough for valleys to be expected.</li>
+  <li><a href="https://www.redblobgames.com/maps/terrain-from-noise#ridged">Ridged</a>
+    noise can give the mountains a nice jagged look, but doesn't look so nice for
+    hills or forests.</li>
+</ul>
