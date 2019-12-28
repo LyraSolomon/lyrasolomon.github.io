@@ -1,5 +1,6 @@
 var update;
-const fov = 65.0 * Math.PI / 180.0;
+var fovY = 65.0 * Math.PI / 180.0;
+var fovX;
 const range = 8.;
 const steps = 100;
 var loadingMsg;
@@ -27,11 +28,14 @@ function mkTerrain(id, loadingId) {
     }
   }
   var idInner = id + "-inner";
-  document.getElementById(id).innerHTML = '<canvas id="'+idInner+'" width="720" height="480" z-index="0">HTML5 not supported!</canvas>';
+  width = document.getElementById(id).clientWidth;
+  height = document.getElementById(id).clientHeight;
+  fovX = fovY / height * width;
+  document.getElementById(id).innerHTML = '<canvas id="'+idInner+'" width="'+width+'" height="'+height+'" z-index="0">HTML5 not supported!</canvas>';
   document.getElementById(idInner).width = document.getElementById(id).offsetWidth;
   document.getElementById(idInner).height = document.getElementById(id).offsetHeight;
   loadingMsg.innerHTML += "<br/>Building shaders";
-  setupGl(idInner, "/terrain/terrain-vertex.c", "/terrain/terrain-fragment.c", drawTerrain);
+  setupGl(idInner, "${include(url)}/terrain-vertex.c", "${include(url)}/terrain-fragment.c", drawTerrain);
 }
 
 function drawTerrain(gl, shader) {
@@ -69,7 +73,7 @@ function drawScene(gl, programInfo, buffers) {
   const zNear = 0.01;
   const zFar = 100;
   var projection = mat4.create();
-  mat4.perspective(projection, fov, aspect, zNear, zFar);
+  mat4.perspective(projection, fovY, aspect, zNear, zFar);
   var observer = mat4.create();
   gl.useProgram(programInfo.program);
   gl.uniformMatrix4fv(programInfo.uniforms.projection, false, projection);
@@ -81,9 +85,9 @@ function drawScene(gl, programInfo, buffers) {
 function initBufs(gl) {
   var points = {};
   const istep = Math.atan(range*2)/steps*2.;
-  const jstep = fov*1.4/steps/2.;
+  const jstep = fovY*1.4/steps/2.;
   for (var i = 0; i < Math.atan(range); i += istep) {
-    for (var j = -fov/1.4; j < fov/1.4; j += jstep) {
+    for (var j = -fovX/1.4; j < fovX/1.4; j += jstep) {
       pushQuad(points, [Math.tan(i)*Math.sin(j)/2, 0., -Math.tan(i)*Math.cos(j)/2],
                        [Math.tan(i)*Math.sin(j+jstep)/2, 0., -Math.tan(i)*Math.cos(j+jstep)/2],
                        [Math.tan(i+istep)*Math.sin(j+jstep)/2, 0., -Math.tan(i+istep)*Math.cos(j+jstep)/2],

@@ -1,20 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-  ${include(/head.html)}
+  <head>
+    ${include(/head.html)}
+    <script src="${include(url)}/terrain.js"></script>
+    <script src="/gl_utils.js"></script>
+    <script src="/third_party/gl-matrix.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+    <link rel="stylesheet" href="layout.css">
+    <link rel="stylesheet" href="/simple.css">
+  </head>
   <body>
-    ${include(/header.html)}
-    <main class="page-content">
-      <div class="wrapper">
-        <article class="post">
-          <header class="post-header">
-            <h1 class="post-title">${include(title)}</h1>
-          </header>
-          <div class="post-content">
-            ${include(terrain.html)}
-          </div>
-        </article>
+    <div class="background">
+      ${include(image.html)
+    </div>
+    <div class="ribbon">
+      <div class="center-col">
+        <div class="header">
+          <a class="site-title" href="/">${include(/title)}</a>
+        </div>
       </div>
-    </main>
-    ${include(/footer.html)}
+    </div>
+    <div class="center-col">
+      <div class="title">
+        <h1 class="post-title">${include(title)}</h1>
+        <p>${include(subtitle)}</p>
+        <hr/>
+      </div>
+      <div class="content-wrapper">
+        <div class="content">
+          ${include(text.html)}
+        </div>
+      </div>
+    </div>
   </body>
 </html>

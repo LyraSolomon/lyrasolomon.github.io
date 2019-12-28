@@ -2,7 +2,7 @@ var plots = {};
 
 function mkVisualization(id, mode) {
   if (mode == "vertex") {
-    setupGl(id, "/assets/terrain/visualization-vertex.c", "/assets/terrain/visualization-fragment.c", runVisualization);
+    setupGl(id, "${include(url)}/visualization-vertex.c", "${include(url)}/visualization-fragment.c", runVisualization);
     return;
   }
   plots[id] = function() {

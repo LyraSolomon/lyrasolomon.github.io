@@ -23,7 +23,7 @@ buildApp src = do
   srcRel <- makeRelativeToCurrentDirectory src
   putStrLn $ "*** building " ++ srcRel ++ " ***"
   root <- getCurrentDirectory
-  url <- readFile $ src ++ "/url"
+  url <- readFile $ src ++ "/includes/url"
   let dst = root ++ "/build" ++ init url
   buildFile src (src ++ "/pages") dst
 
