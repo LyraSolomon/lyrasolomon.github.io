@@ -1,0 +1,63 @@
+@media (min-aspect-ratio: 15/4) {
+  .app-layout {
+    grid-template: "unprocessed processed controls" 100vh
+                   / 150vh      150vh     calc(100vw - 300vh)
+  }
+}
+
+@media (max-aspect-ratio: 15/4) and (min-aspect-ratio: 5/4) {
+  .app-layout {
+    grid-template: "unprocessed controls" 50vh
+                   "processed   controls" 50vh
+                   / 75vh       1fr
+  }
+}
+
+@media (max-aspect-ratio: 5/4) and (min-aspect-ratio: 1/2) {
+  .app-layout {
+    grid-template: "unprocessed processed" 33.3vw
+                   "controls    controls"  calc(100vh - 33.3vw)
+                   / 1fr        1fr
+  }
+}
+@media (max-aspect-ratio: 1/2) {
+  .app-layout {
+    grid-template: "unprocessed" 66.7vw
+                   "processed"   66.7vw
+                   "controls"    calc(100vh - 133.4vw)
+                   / 1fr
+  }
+}
+.app-layout {
+  display: grid;
+}
+.unprocessed {
+  grid-area: unprocessed;
+  position: relative;
+}
+.processed {
+  grid-area: processed;
+  position: relative;
+}
+.controls {
+  grid-area: controls;
+  position: relative;
+}
+html, body {
+  overflow: hidden;
+  padding: 0;
+}
+#basket-bot, #scoreboard {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+#scoreboard {
+  position: absolute;
+  top: 1em;
+  left: 1em;
+  color: white; /* TODO */
+  z-index: 1;
+}

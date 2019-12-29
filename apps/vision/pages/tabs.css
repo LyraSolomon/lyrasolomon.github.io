@@ -1,0 +1,48 @@
+.header {
+  background-color: #fdfdfdff;
+  border-top: 5px solid #424242;
+  border-bottom: 1px solid #e8e8e8;
+  padding-top: 0;
+  padding-bottom: 0;
+  width: 100%;
+  height: 54px;
+}
+.tab-label {
+  float: left;
+  border-right: 1px solid #e8e8e8;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+.checkboxtab:checked ~ .tab-label {
+  background-color: #f7f7f7;
+}
+.tab-content-wrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 60px;
+}
+.tab-content {
+  padding: 1rem;
+  background-color: white; /* TODO */
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+}
+.checkboxtab {
+  display: none;
+}
+.checkboxtab:not(:checked) ~ .tab-content-wrapper {
+  display: none;
+}
+.title-wrapper {
+  float: right;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+iframe {
+  border: none;
+}

@@ -1,0 +1,47 @@
+<div class="header">
+  <div class="tab">
+    <input name="checkbox-tabs-group" type="radio" id="checkbox1" class="checkboxtab" checked />
+    <div class="tab-label">
+      <label for="checkbox1">
+        <a class="site-title">Tutorial</a>
+      </label>
+    </div>
+    <div class="tab-content-wrapper">
+      <div class="tab-content">
+        <iframe name="tutorial" src="${include(url)}/tutorial.html" style="border:none" width="100%" height="100%"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab">
+    <input name="checkbox-tabs-group" type="radio" id="checkbox2" class="checkboxtab"/>
+    <div class="tab-label">
+      <label for="checkbox2">
+        <a class="site-title">Try it</a>
+      </label>
+    </div>
+    <div class="tab-content-wrapper">
+      <div class="tab-content">
+        <code>function process(mat) {</code>
+        <textarea id="code" style="resize:none; width:99%; height:calc(100% - 3rem)" id="code">//undefined()</textarea>
+        <code>}</code>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab">
+    <input name="checkbox-tabs-group" type="radio" id="checkbox3" class="checkboxtab"/>
+    <div class="tab-label">
+      <label for="checkbox3">
+        <a class="site-title">Documentation</a>
+      </label>
+    </div>
+    <div class="tab-content-wrapper">
+      <div class="tab-content">aaaaa</div>
+    </div>
+  </div>
+
+  <div class="title-wrapper">
+    <a href="/" class="site-title">${include(/title)}</a>
+  </div>
+</div>
