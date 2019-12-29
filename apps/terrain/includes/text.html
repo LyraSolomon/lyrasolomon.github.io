@@ -2,30 +2,31 @@
   <table>
     <tr>
       <td><label for="gain-ground">Ground Noise Gain</label></td>
-      <td>0.0<input type="range" min="0.0" max="0.8" step="any" oninput="update()" id="gain-ground" name="gain-ground" />0.8</td>
+      <td>0.0<input type="range" min="0.0" max="0.8" step="any" onchange="update()" oninput="updateIfChecked()" id="gain-ground" name="gain-ground" />0.8</td>
     </tr>
     <tr>
       <td><label for="amp-ground">Ground Amplitude</label></td>
-      <td>0.0<input type="range" min="0.0" max="3.0" step="any" oninput="update()" id="amp-ground" name="amp-ground" />3.0</td>
+      <td>0.0<input type="range" min="0.0" max="3.0" step="any" onchange="update()" oninput="updateIfChecked()" id="amp-ground" name="amp-ground" />3.0</td>
     </tr>
     <tr>
       <td><label for="gain-sky">Cloud Noise Gain</label></td>
-      <td>0.0<input type="range" min="0.0" max="1.0" step="any" oninput="update()" id="gain-sky" name="gain-sky" />1.0</td>
+      <td>0.0<input type="range" min="0.0" max="1.0" step="any" onchange="update()" oninput="updateIfChecked()" id="gain-sky" name="gain-sky" />1.0</td>
     </tr>
     <tr>
       <td><label for="exp-sky">Cloud Exponent</label></td>
-      <td>0.0<input type="range" min="0.0" max="3.0" step="any" oninput="update()" id="exp-sky" name="exp-sky" />3.0</td>
+      <td>0.0<input type="range" min="0.0" max="3.0" step="any" onchange="update()" oninput="updateIfChecked()" id="exp-sky" name="exp-sky" />3.0</td>
     </tr>
     <tr>
       <td><label for="exp-stars">Star Exponent (log scale)</label></td>
-      <td>0.0<input type="range" min="0.0" max="5.0" step="any" oninput="update()" id="exp-stars" name="exp-stars" />150.0</td>
+      <td>0.0<input type="range" min="0.0" max="5.0" step="any" onchange="update()" oninput="updateIfChecked()" id="exp-stars" name="exp-stars" />150.0</td>
     </tr>
     <tr>
       <td><label for="time">Time</label></td>
-      <td>2.0<input type="range" min="2.0" max="26.0" step="any" oninput="update()" id="time" name="time" />26.0</td>
+      <td>2.0<input type="range" min="2.0" max="26.0" step="any" onchange="update()" oninput="updateIfChecked()" id="time" name="time" />26.0</td>
     </tr>
     <tr>
-      <td colspan="2"><input type="submit" value="Regenerate & Share" /></td>
+      <td><label for="isFast">Update Continuously? (not recommended for mobile or slow computers)</label><input type="checkbox" id="isFast" /></td>
+      <td><input type="submit" value="Regenerate & Share" /></td>
     </tr>
   </table>
 </form>

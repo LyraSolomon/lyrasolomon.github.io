@@ -9,28 +9,36 @@
     <link rel="stylesheet" href="layout.css">
     <link rel="stylesheet" href="/simple.css">
   </head>
+
   <body>
-    <div class="background">
-      ${include(image.html)
-    </div>
     <div class="ribbon">
       <div class="center-col">
         <div class="header">
           <a class="site-title" href="/">${include(/title)}</a>
-        </div>
-      </div>
-    </div>
-    <div class="center-col">
-      <div class="title">
-        <h1 class="post-title">${include(title)}</h1>
-        <p>${include(subtitle)}</p>
-        <hr/>
-      </div>
-      <div class="content-wrapper">
-        <div class="content">
-          ${include(text.html)}
-        </div>
-      </div>
-    </div>
+        </div><!-- header -->
+      </div><!-- center-col -->
+    </div><!-- ribbon -->
+
+    <div class="mobile-align">
+      <div class="center-col">
+        <div class="title">
+          <h1 class="post-title">${include(title)}</h1>
+          <p>${include(subtitle)}</p>
+          <hr/>
+        </div><!-- title -->
+      </div><!-- center-col -->
+
+      <div class="background">
+        ${include(image.html)}
+      </div><!-- background -->
+
+      <div class="center-col">
+        <div class="content-wrapper">
+          <div class="content">
+            ${include(text.html)}
+          </div><!-- content -->
+        </div><!-- content-wrapper -->
+      </div><!-- center-col -->
+    </div><!-- mobile-align -->
   </body>
 </html>
