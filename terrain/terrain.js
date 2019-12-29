@@ -31,7 +31,7 @@ function mkTerrain(id, loadingId) {
   width = document.getElementById(id).clientWidth;
   height = document.getElementById(id).clientHeight;
   fovX = fovY / height * width;
-  document.getElementById(id).innerHTML = '<canvas id="'+idInner+'" width="'+width+'" height="'+height+'" z-index="0">HTML5 not supported!</canvas>';
+  document.getElementById(id).innerHTML = '<canvas id="'+idInner+'" width="'+width+'" height="'+height+'">HTML5 not supported!</canvas>';
   document.getElementById(idInner).width = document.getElementById(id).offsetWidth;
   document.getElementById(idInner).height = document.getElementById(id).offsetHeight;
   loadingMsg.innerHTML += "<br/>Building shaders";
@@ -109,4 +109,9 @@ function initBufs(gl) {
                    [0., 0., 0.]);
   const sky = mkBufs(gl, points);
   return { ground: ground, sky: sky };
+}
+function updateIfChecked() {
+  if (document.getElementById("isFast").checked) {
+    update();
+  }
 }

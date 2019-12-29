@@ -19,52 +19,64 @@
     <link rel="stylesheet" href="layout.css">
     <link rel="stylesheet" href="/simple.css">
   </head>
+
   <body>
-    <div class="background">
-      <div style="top:0; left:0; bottom:0; right:0; position:absolute" id="mountain"></div>
+    <div class="ribbon">
+      <div class="center-col">
+        <div class="header">
+          <a class="site-title" href="/">Tangible Tutorials</a>
+        </div><!-- header -->
+      </div><!-- center-col -->
+    </div><!-- ribbon -->
+
+    <div class="mobile-align">
+      <div class="center-col">
+        <div class="title">
+          <h1 class="post-title">Rendering Terrain</h1>
+          <p>Procedurally Generating Pretty Pictures</p>
+          <hr/>
+        </div><!-- title -->
+      </div><!-- center-col -->
+
+      <div class="background">
+        <div style="top:0; left:0; bottom:0; right:0; position:absolute" id="mountain"></div>
 <div id="loading" style="position:absolute; top:1em; left:1em" z-index="1">
   Loading, please wait
-</div></a>
-        </div>
-      </div>
-    </div>
-    <div class="center-col">
-      <div class="title">
-        <h1 class="post-title">Rendering Terrain</h1>
-        <p>Procedurally Generating Pretty Pictures</p>
-        <p>An example of how to generate random scenery using Perlin noise. Includes a conceptual description of the algorithm in simple language, and the ability for the viewer to control the type of terrain and sky.</p>
-        <hr/>
-      </div>
-      <div class="content-wrapper">
-        <div class="content">
-          <form method="GET">
+</div>
+      </div><!-- background -->
+
+      <div class="center-col">
+        <div class="content-wrapper">
+          <div class="content">
+            <form method="GET">
   <table>
     <tr>
       <td><label for="gain-ground">Ground Noise Gain</label></td>
-      <td>0.0<input type="range" min="0.0" max="0.8" step="any" oninput="update()" id="gain-ground" name="gain-ground" />0.8</td>
+      <td>0.0<input type="range" min="0.0" max="0.8" step="any" onchange="update()" oninput="updateIfChecked()" id="gain-ground" name="gain-ground" />0.8</td>
     </tr>
     <tr>
       <td><label for="amp-ground">Ground Amplitude</label></td>
-      <td>0.0<input type="range" min="0.0" max="3.0" step="any" oninput="update()" id="amp-ground" name="amp-ground" />3.0</td>
+      <td>0.0<input type="range" min="0.0" max="3.0" step="any" onchange="update()" oninput="updateIfChecked()" id="amp-ground" name="amp-ground" />3.0</td>
     </tr>
     <tr>
       <td><label for="gain-sky">Cloud Noise Gain</label></td>
-      <td>0.0<input type="range" min="0.0" max="1.0" step="any" oninput="update()" id="gain-sky" name="gain-sky" />1.0</td>
+      <td>0.0<input type="range" min="0.0" max="1.0" step="any" onchange="update()" oninput="updateIfChecked()" id="gain-sky" name="gain-sky" />1.0</td>
     </tr>
     <tr>
       <td><label for="exp-sky">Cloud Exponent</label></td>
-      <td>0.0<input type="range" min="0.0" max="3.0" step="any" oninput="update()" id="exp-sky" name="exp-sky" />3.0</td>
+      <td>0.0<input type="range" min="0.0" max="3.0" step="any" onchange="update()" oninput="updateIfChecked()" id="exp-sky" name="exp-sky" />3.0</td>
     </tr>
     <tr>
       <td><label for="exp-stars">Star Exponent (log scale)</label></td>
-      <td>0.0<input type="range" min="0.0" max="5.0" step="any" oninput="update()" id="exp-stars" name="exp-stars" />150.0</td>
+      <td>0.0<input type="range" min="0.0" max="5.0" step="any" onchange="update()" oninput="updateIfChecked()" id="exp-stars" name="exp-stars" />150.0</td>
     </tr>
     <tr>
       <td><label for="time">Time</label></td>
-      <td>2.0<input type="range" min="2.0" max="26.0" step="any" oninput="update()" id="time" name="time" />26.0</td>
+      <td>2.0<input type="range" min="2.0" max="26.0" step="any" onchange="update()" oninput="updateIfChecked()" id="time" name="time" />26.0</td>
     </tr>
     <tr>
-      <td colspan="2"><input type="submit" value="Regenerate & Share" /></td>
+      <td><label for="isFast">Update Continuously? (not recommended for mobile or slow computers)</label><input type="checkbox" id="isFast" /></td>
+      <td><input type="submit" value="Regenerate & Share" /></td>
     </tr>
   </table>
 </form>
@@ -293,8 +305,9 @@ canvas, svg {
   display: block
 }
 </style>
-        </div>
-      </div>
-    </div>
+          </div><!-- content -->
+        </div><!-- content-wrapper -->
+      </div><!-- center-col -->
+    </div><!-- mobile-align -->
   </body>
 </html>
