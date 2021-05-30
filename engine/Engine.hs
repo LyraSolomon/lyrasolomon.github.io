@@ -1,7 +1,9 @@
 import System.Directory
+import System.Process (callCommand)
 import Control.Monad (when)
 import Data.Time.Clock (UTCTime)
 import qualified Data.Set as Set
+import Debug.Trace
 
 runEngine :: FilePath -> String -> IO String
 runEngine p ('$':'{':'$':xs) = ("${" ++) <$> runEngine p xs
@@ -12,6 +14,7 @@ runEngine _ [] = return []
 runCommand :: FilePath -> String -> IO String
 runCommand p ('i':'n':'c':'l':'u':'d':'e':'(':'/':xs) = (runEngine p . init) =<< readFile ("includes/" ++ takeWhile (/=')') xs)
 runCommand p ('i':'n':'c':'l':'u':'d':'e':'(':xs) = (runEngine p . init) =<< readFile (p ++ "/includes/" ++ takeWhile (/=')') xs)
+runCommand p ('e':'a':'c':'h':'p':'o':'s':'t':'(':xs) = (runEngine p) =<< (eachPost . init) =<< readFile (p ++ "/includes/" ++ takeWhile (/=')') xs)
 runCommand p s = fail ("in file" ++ show p ++ "unknown command: " ++ s)
 
 main :: IO ()
@@ -25,6 +28,8 @@ buildApp :: FilePath -> IO [FilePath]
 buildApp src = do
   srcRel <- makeRelativeToCurrentDirectory src
   putStrLn $ "*** building " ++ srcRel ++ " ***"
+  hasGenrule <- (&&) <$> doesFileExist (src ++ "/makefile") <*> doesDirectoryExist (src ++ "/codegen")
+  when hasGenrule $ withCurrentDirectory src $ callCommand "make"
   root <- getCurrentDirectory
   url <- readFile $ src ++ "/includes/url"
   let dst = root ++ "/build" ++ init url
@@ -70,3 +75,9 @@ lastModified p = do
     files <- listDirectory p
     maximum <$> mapM (\x -> lastModified (p ++ "/" ++ x)) files
   else getModificationTime p
+
+eachPost :: String -> IO String
+eachPost str = do
+  root <- getCurrentDirectory
+  apps <- listDirectory $ root ++ "/apps"
+  concat <$> mapM (\app -> runEngine (root ++ "/apps/" ++ app) str) (filter ((/='_') . head) $ traceShowId apps)

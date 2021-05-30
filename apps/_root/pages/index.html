@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    ${include(/head.html)}
+    <link rel="stylesheet" href="/main.css">
+  </head>
+
+  <body>
+
+    ${include(/header.html)}
+
+    <main class="page-content">
+      <div class="wrapper">
+        <h1 class="post-list-heading">Posts</h1>
+        <ul class="post-list">
+          ${eachpost(card.html)}
+        </ul>
+      </div>
+    </main>
+
+    ${include(/footer.html)}
+
+  </body>
+
+</html>

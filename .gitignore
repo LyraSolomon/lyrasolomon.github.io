@@ -1,2 +1,5 @@
-.hdevtools.sock
+*.hdevtools.sock
+*.ibc
 build/
+# Generated files
+apps/prettify/pages/mathmatify.js
