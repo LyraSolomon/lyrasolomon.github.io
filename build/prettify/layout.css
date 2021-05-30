@@ -1,0 +1,17 @@
+.title {
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+textarea {
+  width:-webkit-calc(800px - (30px * 2));
+  width:calc(800px - (30px * 2));
+}
+@media screen and (max-width: 800px) {
+  textarea {
+    width:-webkit-calc(800px - (30px));
+    width:calc(800px - (30px));
+  }
+}
+#textout {
+  background-color: #cccccc;
+}

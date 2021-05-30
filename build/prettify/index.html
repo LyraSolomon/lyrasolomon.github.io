@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<meta name="author" content="Lyra Solomon">
+<meta name="description" content="A web app that converts marked-up ASCII text to a pure unicode version including symbols and multiple fonts" />
+<title>Unicode Generator</title>
+<meta property="og:title" content="Unicode Generator" />
+<meta property="og:type" content="website" />
+<meta property="og:description" content="A web app that converts marked-up ASCII text to a pure unicode version including symbols and multiple fonts" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://LyraSolomon.github.io//prettify" />
+<!--<meta property="og:image" content="" />-->
+<!--<meta property="og:locale:alternate" content="" />-->
+    <script src="/prettify/interact.js"></script>
+    <script src="/prettify/mathmatify.js"></script>
+    <link rel="stylesheet" href="layout.css">
+    <link rel="stylesheet" href="/simple.css">
+    <link rel="stylesheet" href="/main.css">
+  </head>
+
+  <body>
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    <!--{%- assign default_paths = site.pages | map: "path" -%}
+      {%- assign page_paths = site.header_pages | default: default_paths -%}-->
+    <a class="site-title" rel="author" href="/">Tangible Tutorials</a>
+
+
+    <nav class="site-nav">
+      <a href="https://github.com/LyraSolomon">
+        <svg class="svg-icon">
+          <use xlink:href="/third_party/social.svg#github"></use>
+        </svg>
+      </a>
+    </nav>
+    <!--{%- if page_paths -%}
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+        <div class="trigger">
+          {%- for path in page_paths -%}
+            {%- assign my_page = site.pages | where: "path", path | first -%}
+            {%- if my_page.title -%}
+            <a class="page-link" href="{{ my_page.url | relative_url }}">{{ my_page.title | escape }}</a>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </nav>
+    {%- endif -%}-->
+  </div>
+</header>
+    <main class="page-content">
+      <div class="wrapper">
+        <div class="title">
+          <h1 class="post-title">Unicode Generator</h1>
+          <p>Portable Formulae and Fun</p>
+          <hr/>
+        </div><!-- title -->
+
+        <div class="content-wrapper">
+          <div class="content">
+            <label for="textin">Input text to format here</label>
+<textarea onchange="updateOutput()" id="textin" name="textin" rows="10" cols="80"></textarea>
+<p id="textout">[formatted text]</p>
+
+<p>Use HTML-style tags to change the font. Use backslashes or symbol combinations to enter special symbols.<p>
+
+<table>
+  <tr>
+    <td><code>&lt;serif&gt;&lt;b&gt;</code></td>
+    <td>𝐀 𝐚 𝐁 𝐛 𝐂 𝐜 𝐃 𝐝 𝐄 𝐞 𝐅 𝐟 𝐆 𝐠 𝐇 𝐡 𝐈 𝐢 𝐉 𝐣 𝐊 𝐤 𝐋 𝐥 𝐌 𝐦 𝐍 𝐧 𝐎 𝐨 𝐏 𝐩 𝐐 𝐪 𝐑 𝐫 𝐒 𝐬 𝐓 𝐭 𝐔 𝐮 𝐕 𝐯 𝐖 𝐰 𝐗 𝐱 𝐘 𝐲 𝐙 𝐳 𝟎 𝟏 𝟐 𝟑 𝟒 𝟓 𝟔 𝟕 𝟖 𝟗 𝚨 𝛂 𝚩 𝛃 𝚪 𝛄 𝚫 𝛅 𝚬 𝛆 𝚭 𝛇 𝚮 𝛈 𝚯 𝛉 𝚰 𝛊 𝚱 𝛋 𝚲 𝛌 𝚳 𝛍 𝚴 𝛎 𝚵 𝛏 𝚶 𝛐 𝚷 𝛑 𝚸 𝛒 𝚺 𝛓 𝛔 𝚻 𝛕 𝚼 𝛖 𝚽 𝛗 𝚾 𝛘 𝚿 𝛙 𝛀 𝛚</td>
+  </tr>
+  <tr>
+    <td><code>&lt;serif&gt;&lt;i&gt;</code></td>
+    <td>𝐴 𝑎 𝐵 𝑏 𝐶 𝑐 𝐷 𝑑 𝐸 𝑒 𝐹 𝑓 𝐺 𝑔 𝐻 𝘩 𝐼 𝑖 𝐽 𝑗 𝐾 𝑘 𝐿 𝑙 𝑀 𝑚 𝑁 𝑛 𝑂 𝑜 𝑃 𝑝 𝑄 𝑞 𝑅 𝑟 𝑆 𝑠 𝑇 𝑡 𝑈 𝑢 𝑉 𝑣 𝑊 𝑤 𝑋 𝑥 𝑌 𝑦 𝑍 𝑧 𝛢 𝛼 𝛣 𝛽 𝛤 𝛾 𝛥 𝛿 𝛦 𝜀 𝛧 𝜁 𝛨 𝜂 𝛩 𝜃 𝛪 𝜄 𝛫 𝜅 𝛬 𝜆 𝛭 𝜇 𝛮 𝜈 𝛯 𝜉 𝛰 𝜊 𝛱 𝜋 𝛲 𝜌 𝛴 𝜍 𝜎 𝛵 𝜏 𝜐 𝜐 𝛷 𝜑 𝛸 𝜒 𝛹 𝜓 𝛺 𝜔</td>
+  <tr>
+    <td><code>&lt;serif&gt;&lt;b&gt;&lt;i&gt;</code></td>
+    <td>𝑨 𝒂 𝑩 𝒃 𝑪 𝒄 𝑫 𝒅 𝑬 𝒆 𝑭 𝒇 𝑮 𝒈 𝑯 𝒉 𝑰 𝒊 𝑱 𝒋 𝑲 𝒌 𝑳 𝒍 𝑴 𝒎 𝑵 𝒏 𝑶 𝒐 𝑷 𝒑 𝑸 𝒒 𝑹 𝒓 𝑺 𝒔 𝑻 𝒕 𝑼 𝒖 𝑽 𝒗 𝑾 𝒘 𝑿 𝒙 𝒀 𝒚 𝒁 𝒛 𝜜 𝜶 𝜝 𝜷 𝜞 𝜸 𝜟 𝜹 𝜠 𝜺 𝜡 𝜻 𝜢 𝜼 𝜣 𝜽 𝜤 𝜾 𝜥 𝜿 𝜦 𝝀 𝜧 𝝁 𝜨 𝝂 𝜩 𝝃 𝜪 𝝄 𝜫 𝝅 𝜬 𝝆 𝜮 𝝇 𝝈 𝜯 𝝉 𝜰 𝝊 𝜱 𝝋 𝜲 𝝌 𝜳 𝝍 𝜴 𝝎</td>
+  </tr>
+  <tr>
+    <td><code>&lt;lines&gt;</code></td>
+    <td>𝔸 𝕒 𝔹 𝕓 ℂ 𝕔 𝔻 𝕕 𝔼 𝕖 𝔽 𝕗 𝔾 𝕘 ℍ 𝕙 𝕀 𝕚 𝕁 𝕛 𝕂 𝕜 𝕃 𝕝 𝕄 𝕞 ℕ 𝕟 𝕆 𝕠 ℙ 𝕡 ℚ 𝕢 ℝ 𝕣 𝕊 𝕤 𝕋 𝕥 𝕌 𝕦 𝕍 𝕧 𝕎 𝕨 𝕏 𝕩 𝕐 𝕪 ℤ 𝕫 𝟘 𝟙 𝟚 𝟛 𝟜 𝟝 𝟞 𝟟 𝟠 𝟡</td>
+  </tr>
+  <tr>
+    <td><code>&lt;fraktur&gt;</code></td>
+    <td>𝔄 𝔞 𝔅 𝔟 ℭ 𝔠 𝔇 𝔡 𝔈 𝔢 𝔉 𝔣 𝔊 𝔤 ℌ 𝔥 ℑ 𝔦 𝔍 𝔧 𝔎 𝔨 𝔏 𝔩 𝔐 𝔪 𝔑 𝔫 𝔒 𝔬 𝔓 𝔭 𝔔 𝔮 ℜ 𝔯 𝔖 𝔰 𝔗 𝔱 𝔘 𝔲 𝔙 𝔳 𝔚 𝔴 𝔛 𝔵 𝔜 𝔶 ℨ 𝔷</td>
+  </tr>
+  <tr>
+    <td><code>&lt;b&gt;&lt;fraktur&gt;</code></td>
+    <td>𝕬 𝖆 𝕭 𝖇 𝕮 𝖈 𝕯 𝖉 𝕰 𝖊 𝕱 𝖋 𝕲 𝖌 𝕳 𝖍 𝕴 𝖎 𝕵 𝖏 𝕶 𝖐 𝕷 𝖑 𝕸 𝖒 𝕹 𝖓 𝕺 𝖔 𝕻 𝖕 𝕼 𝖖 𝕽 𝖗 𝕾 𝖘 𝕿 𝖙 𝖀 𝖚 𝖁 𝖛 𝖂 𝖜 𝖃 𝖝 𝖄 𝖞 𝖅 𝖟</td>
+  </tr>
+  <tr>
+    <td><code>&lt;script&gt;</code></td>
+    <td>𝒜 𝒶 ℬ 𝒷 𝒞 𝒸 𝒟 𝒹 ℰ ℯ ℱ 𝒻 𝒢 ↩ ℋ 𝒽 ℐ 𝒾 𝒥 𝒿 𝒦 𝓀 ℒ 𝓁 ℳ 𝓂 𝒩 𝓃 𝒪 ℴ ℘ 𝓅 𝒬 𝓆 ℛ 𝓇 𝒮 𝓈 𝒯 𝓉 𝒰 𝓊 𝒱 𝓋 𝒲 𝓌 𝒳 𝓍 𝒴 𝓎 𝒵 𝓏 </td>
+  </tr>
+  <tr>
+    <td><code>&lt;b&gt;&lt;script&gt;</code></td>
+    <td>𝓐 𝓪 𝓑 𝓫 𝓒 𝓬 𝓓 𝓭 𝓔 𝓮 𝓕 𝓯 𝓖 𝓰 𝓗 𝓱 𝓘 𝓲 𝓙 𝓳 𝓚 𝓴 𝓛 𝓵 𝓜 𝓶 𝓝 𝓷 𝓞 𝓸 𝓟 𝓹 𝓠 𝓺 𝓡 𝓻 𝓢 𝓼 𝓣 𝓽 𝓤 𝓾 𝓥 𝓿 𝓦 𝔀 𝓧 𝔁 𝓨 𝔂 𝓩 𝔃</td>
+  </tr>
+  <tr>
+    <td><code>&lt;sans&gt;</code></td>
+    <td>𝖠 𝖺 𝖡 𝖻 𝖢 𝖼 𝖣 𝖽 𝖤 𝖾 𝖥 𝖿 𝖦 𝗀 𝖧 𝗁 𝖨 𝗂 𝖩 𝗃 𝖪 𝗄 𝖫 𝗅 𝖬 𝗆 𝖭 𝗇 𝖮 𝗈 𝖯 𝗉 𝖰 𝗊 𝖱 𝗋 𝖲 𝗌 𝖳 𝗍 𝖴 𝗎 𝖵 𝗏 𝖶 𝗐 𝖷 𝗑 𝖸 𝗒 𝖹 𝗓 𝟢 𝟣 𝟤 𝟥 𝟦 𝟧 𝟨 𝟩 𝟪 𝟫</td>
+  </tr>
+  <tr>
+    <td><code>&lt;b&gt;&lt;sans&gt;</code></td>
+    <td>𝗔 𝗮 𝗕 𝗯 𝗖 𝗰 𝗗 𝗱 𝗘 𝗲 𝗙 𝗳 𝗚 𝗴 𝗛 𝗵 𝗜 𝗶 𝗝 𝗷 𝗞 𝗸 𝗟 𝗹 𝗠 𝗺 𝗡 𝗻 𝗢 𝗼 𝗣 𝗽 𝗤 𝗾 𝗥 𝗿 𝗦 𝘀 𝗧 𝘁 𝗨 𝘂 𝗩 𝘃 𝗪 𝘄 𝗫 𝘅 𝗬 𝘆 𝗭 𝘇 𝟬 𝟭 𝟮 𝟯 𝟰 𝟱 𝟲 𝟳 𝟴 𝟵 𝝖 𝝰 𝝗 𝝱 𝝘 𝝲 𝝙 𝝳 𝝚 𝝴 𝝛 𝝵 𝝜 𝝶 𝝝 𝝷 𝝞 𝝸 𝝟 𝝹 𝝠 𝝺 𝝡 𝝻 𝝢 𝝼 𝝣 𝝽 𝝤 𝝾 𝝥 𝝿 𝝦 𝞀 𝝨 𝞁 𝞂 𝝩 𝞃 𝝪 𝞄 𝝫 𝞅 𝝬 𝞆 𝝭 𝞇 𝝮 𝞈</td>
+  </tr>
+  <tr>
+    <td><code>&lt;i&gt;&lt;sans&gt;</code></td>
+    <td>𝘈 𝘢 𝘉 𝘣 𝘊 𝘤 𝘋 𝘥 𝘌 𝘦 𝘍 𝘧 𝘎 𝘨 𝘏 𝘩 𝘐 𝘪 𝘑 𝘫 𝘒 𝘬 𝘓 𝘭 𝘔 𝘮 𝘕 𝘯 𝘖 𝘰 𝘗 𝘱 𝘘 𝘲 𝘙 𝘳 𝘚 𝘴 𝘛 𝘵 𝘜 𝘶 𝘝 𝘷 𝘞 𝘸 𝘟 𝘹 𝘠 𝘺 𝘡 𝘻</td>
+  </tr>
+  <tr>
+    <td><code>&lt;b&gt;&lt;i&gt;&lt;sans&gt;</code></td>
+    <td>𝘼 𝙖 𝘽 𝙗 𝘾 𝙘 𝘿 𝙙 𝙀 𝙚 𝙁 𝙛 𝙂 𝙜 𝙃 𝙝 𝙄 𝙞 𝙅 𝙟 𝙆 𝙠 𝙇 𝙡 𝙈 𝙢 𝙉 𝙣 𝙊 𝙤 𝙋 𝙥 𝙌 𝙦 𝙍 𝙧 𝙎 𝙨 𝙏 𝙩 𝙐 𝙪 𝙑 𝙫 𝙒 𝙬 𝙓 𝙭 𝙔 𝙮 𝙕 𝙯 𝞐 𝞪 𝞑 𝞫 𝞒 𝞬 𝞓 𝞭 𝞔 𝞮 𝞕 𝞯 𝞖 𝞰 𝞗 𝞱 𝞘 𝞲 𝞙 𝞳 𝞚 𝞴 𝞛 𝞵 𝞜 𝞶 𝞝 𝞷 𝞞 𝞸 𝞟 𝞹 𝞠 𝞺 𝞢 𝞻 𝞼 𝞣 𝞽 𝞤 𝞾 𝞥 𝞿 𝞦 𝟀 𝞧 𝟁 𝞨 𝟂</td>
+  </tr>
+  <tr>
+    <td><code>&lt;mono&gt;</code></td>
+    <td>𝙰 𝚊 𝙱 𝚋 𝙲 𝚌 𝙳 𝚍 𝙴 𝚎 𝙵 𝚏 𝙶 𝚐 𝙷 𝚑 𝙸 𝚒 𝙹 𝚓 𝙺 𝚔 𝙻 𝚕 𝙼 𝚖 𝙽 𝚗 𝙾 𝚘 𝙿 𝚙 𝚀 𝚚 𝚁 𝚛 𝚂 𝚜 𝚃 𝚝 𝚄 𝚞 𝚅 𝚟 𝚆 𝚠 𝚇 𝚡 𝚈 𝚢 𝚉 𝚣 𝟶 𝟷 𝟸 𝟹 𝟺 𝟻 𝟼 𝟽 𝟾 𝟿</td>
+  </tr>
+  <tr>
+    <td>Additional fonts and emoji</td>
+    <td>Coming soon!</td>
+  </tr>
+  <tr>
+    <td><code>x^_</code> <code>x^^</code> <code>x^.</code> <code>x^~</code> <code>x^'</code> <code>x^&quot;</code> <code>x^&gt;</code>
+      <code>^+</code> <code>^-</code> <code>^=</code> <code>^(</code> <code>^)</code>
+      <code>^0</code> <code>^1</code> <code>^2</code>... <code>^i</code> <code>^n</code>
+      <code>_+</code> <code>_-</code> <code>_=</code> <code>_(</code> <code>_)</code> <code>_0</code> <code>_1</code> <code>_2</code>...
+      <code>_a</code> <code>_e</code> <code>_h</code> <code>_i</code> <code>_k</code> <code>_l</code> <code>_m</code> <code>_n</code> <code>_o</code>
+      <code>_p</code> <code>_r</code> <code>_s</code> <code>_t</code> <code>_u</code> <code>_v</code> <code>_x</code></td>
+    <td>x̄ x̂ ẋ x̃ xʹ xʺ x⃑ x⁺ x⁻ x⁼ x⁽ x⁾ x⁰ x¹ x² x³ x⁴ x⁵ x⁶ x⁷ x⁸ x⁹ xⁱ xⁿ x₊ x₋ x₌ x₍ x₎ x₀ x₁ x₂ x₃ x₄ x₅ x₆ x₇ x₈ x₉ xₐ xₑ xₕ xᵢ xₖ xₗ xₘ xₙ xₒ xₚ xᵣ xₛ xₜ xᵤ xᵥ xₓ</td>
+  </tr>
+  <tr>
+    <td><code>&gt;=</code> <code>&lt;=</code> <code>&gt;&gt;</code> <code>&lt;&lt;</code> <code>!=</code> <code>+-</code>
+      <code>\sqrt</code> <code>\3root</code> <code>\4root</code> <code>\divides</code> <code>\!divides</code> <code>\propto</code>
+      <code>\inf</code> <code>\lfloor x\rfloor</code> <code>\lceil x\rceil</code>
+      <code>\int</code> <code>\iint</code> <code>\iiint</code> <code>\cint</code> <code>\ciint</code> <code>\ciiint</code> <code>\partial</code> <code>\del</code>
+      <code>&amp;&amp;</code> <code>||</code> <code>!!</code> <code>!&amp;&amp;</code> <code>!||</code> <code>?!=</code> <code>_|_</code> <code>:=</code>
+      <code>\forall</code> <code>\exists</code> <code>\!exists</code>
+      <code>\empty</code> <code>\elem</code> <code>\!elem</code> <code>\member</code> <code>\!member</code> <code>\qed</code>
+      <code>\intersect</code> <code>\union</code> <code>\therefore</code> <code>\because</code> <code>\subset</code> <code>\superset</code> <code>\subeq</code> <code>\supeq</code>
+      <code>\parallel</code> <code>\!parallel</code> <code>\perp</code> <code>\deg</code> <code>\dotprod</code> <code>\crossprod</code>
+      <code>\all</code> <code>\any</code> <code>\union1</code> <code>\intersect1</code> <code>\prod</code> <code>\sum</code></td>
+    <td>≥ ≤ ≫ ≪ ≠ ± √ ∛ ∜ ∣ ∤ ∝ ∞ ⌊x⌋ ⌈x⌉ ∫ ∬ ∭ ∮ ∯ ∰ ∂ ∇ ∧ ∨ ¬ ⊼ ⊽ ⊻ ⊥ ≔ ∀ ∃ ∄ ∅ ∈ ∉ ∋ ∌ ∎ ∩ ∪ ∴ ∵ ⊂ ⊃ ⊆ ⊇ ∥ ∦ ⟂ ° · × ⋀ ⋁ ⋃ ⋂ ∏ ∑</td>
+  </tr>
+  <tr>
+    <td><code>\Alpha</code> <code>\alpha</code> <code>\Beta</code> <code>\beta</code>…, <code>\sigma1</code></td>
+    <td>Α α Β β Γ γ Δ δ Ε ε Ζ ζ Η η Θ θ Ι ι Κ κ Λ λ Μ μ Ν ν Ξ ξ Ο ο Π π Ρ ρ Σ ς σ Τ τ υ υ Φ φ Χ χ Ψ ψ Ω ω</td>
+  </tr>
+  <tr>
+    <td><code>[!</code> <code>[?</code> <code>&lt;"</code> <code>"&gt;</code> <code>["</code> <code>['</code> <code>']</code> <code>"]</code>
+      <code>...</code> <code>!?</code> <code>--</code> <code>---</code> <code>\P</code> <code>\S</code> <code>\C</code>
+      <code>\CL</code> <code>\R</code> <code>\TM</code> <code>\cent</code> <code>\yen</code> <code>\dagger</code> <code>\dagger2</code>
+      <code>a__</code> <code>a/-</code> <code>a//</code> <code>A///</code></td>
+    <td>¡ ¿ « » “ ‘ ’ ” … ‽ – — ¶ § © 🄯 ® ™ ¢ ¥ † ‡ a̲ a̶ a̷ A̸</td>
+  </tr>
+</table>
+          </div><!-- content -->
+        </div><!-- content-wrapper -->
+      </div>
+    </main>
+    <footer class="site-footer h-card">
+  <data class="u-url" href="{{ "/" | relative_url }}"></data>
+
+  <div class="wrapper">
+
+    <!--<p>{{ site.description | escape }}</p>-->
+      <p>See a problem? <a href="https://github.com/LyraSolomon/LyraSolomon.github.io/issues">Let me know</a></p>
+
+  </div>
+
+</footer>
+  </body>
+</html>

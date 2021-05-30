@@ -1,6 +1,6 @@
 import System.Directory
 import System.Process (callCommand)
-import Control.Monad (when)
+import Control.Monad
 import Data.Time.Clock (UTCTime)
 import qualified Data.Set as Set
 import Debug.Trace
@@ -20,21 +20,24 @@ runCommand p s = fail ("in file" ++ show p ++ "unknown command: " ++ s)
 main :: IO ()
 main = do
   root <- getCurrentDirectory
+  createDirectoryIfMissing False (root ++ "/build")
   apps <- listDirectory $ root ++ "/apps"
   outs <- concat <$> mapM (\x -> buildApp $ root ++ "/apps/" ++ x) apps
   prune (Set.fromList outs) (root ++ "/build")
 
 buildApp :: FilePath -> IO [FilePath]
 buildApp src = do
-  srcRel <- makeRelativeToCurrentDirectory src
-  putStrLn $ "*** building " ++ srcRel ++ " ***"
-  hasGenrule <- (&&) <$> doesFileExist (src ++ "/makefile") <*> doesDirectoryExist (src ++ "/codegen")
-  when hasGenrule $ withCurrentDirectory src $ callCommand "make"
-  root <- getCurrentDirectory
-  url <- readFile $ src ++ "/includes/url"
-  let dst = root ++ "/build" ++ init url
-  includesLastModified <- max <$> lastModified (src ++ "/includes") <*> lastModified (root ++ "/includes")
-  buildFile src (src ++ "/pages") dst includesLastModified
+  skip <- doesFileExist (src ++ "/IGNORE")
+  if skip then return [] else do
+    srcRel <- makeRelativeToCurrentDirectory src
+    putStrLn $ "*** building " ++ srcRel ++ " ***"
+    hasGenrule <- (&&) <$> doesFileExist (src ++ "/makefile") <*> doesDirectoryExist (src ++ "/codegen")
+    when hasGenrule $ withCurrentDirectory src $ callCommand "make"
+    root <- getCurrentDirectory
+    url <- readFile $ src ++ "/includes/url"
+    let dst = root ++ "/build" ++ init url
+    includesLastModified <- max <$> lastModified (src ++ "/includes") <*> lastModified (root ++ "/includes")
+    buildFile src (src ++ "/pages") dst includesLastModified
 
 buildFile :: FilePath -> FilePath -> FilePath -> UTCTime -> IO [FilePath]
 buildFile ctx src dst incModified = do
@@ -79,5 +82,5 @@ lastModified p = do
 eachPost :: String -> IO String
 eachPost str = do
   root <- getCurrentDirectory
-  apps <- listDirectory $ root ++ "/apps"
+  apps <- filterM (\str-> not <$> doesFileExist (root ++ "/apps/" ++ str ++"/IGNORE")) =<< listDirectory (root ++ "/apps")
   concat <$> mapM (\app -> runEngine (root ++ "/apps/" ++ app) str) (filter ((/='_') . head) $ traceShowId apps)
