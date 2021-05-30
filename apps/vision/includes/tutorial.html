@@ -1,3 +1,115 @@
+<P>
+So you built a robot. As cool as it looks just chilling around, you probably want it to do something.
+You hook up a few joysticks, take the robot for a spin, and try to score some baskets.
+</p>
+
+<table>
+  <tr>
+    <td><code>w</code></td>
+    <td>move forward</td>
+  </tr>
+  <tr>
+    <td><code>s</code></td>
+    <td>move backward</td>
+  </tr>
+  <tr>
+    <td><code>a</code></td>
+    <td>turn left</td>
+  </tr>
+  <tr>
+    <td><code>d</code></td>
+    <td>turn right</td>
+  </tr>
+  <tr>
+    <td><code>q</code></td>
+    <td>shoot</td>
+  </tr>
+</table>
+
+<p>
+Hmm. That turned out to be suprisingly difficult. Maybe it's because the robot is at a weird angle compared
+to your eyes? Installing a camera on the robot should make it easier.
+</p>
+
+<table>
+  <tr>
+    <td><code>e</code></td>
+    <td>change point of view</td>
+  </tr>
+  <tr>
+    <td><code>r</code></td>
+    <td>reset score</td>
+  </tr>
+</table>
+
+<p>
+Well, it's a bit easier, but it's still hardly easy. Clearly just eyeing it isn't good enough. What about aiming with
+a computer? If there's anything computers are good for, it's being fast and precise. It shouldn't be that hard to
+just check the Internet for how to do that, right? How hard can it possibly be?
+</p>
+
+<p>
+...
+</p>
+
+<p>
+Oh. Neural nets? Oh lovely. Well that's not helpful at all. Roll for <s>intelligence</s> endurance.
+<p>
+
+<p>
+  <span id="8ball">......</span>
+  <input type="button" value="Roll" onclick="roll8ball()" />
+</p>
+<script>
+  function roll8ball() {
+    roll=Math.floor(Math.random()*20)+1;
+    message=roll+": ";
+    if (roll < 5) {
+      message += "What are all these symbols? Is this vector calculus? Why do I need to know that?";
+    } else if (roll < 9) {
+      message += "I need <em>how</em> many thousand training images?";
+    } else if (roll < 13) {
+      message += "It's detecting something random, and the only way to debug this thing is to throw the whole thing out and get new training data.";
+    } else if (roll < 17) {
+      message += "Nice, it works... except it only gets 3 frames per second and that's way to slow for a sports game.";
+    } else {
+      message += "Everything's doing well, except for the budget. The budget is making sad faces at the cost of the coprocessor.";
+    }
+    document.getElementById("8ball").innerHTML = message;
+  }
+</script>
+
+<p>
+Honestly, for all the hype, neural networks aren't always a good solution, but finding sites that tell you how to use
+anything else are few and far between. Machine learning is good for data that requires noticing details, but it's slow
+and hard to debug. Detecting something like the <a href="https://en.wikipedia.org/wiki/Retroreflective_sheeting">retroreflective tape</a>
+used in FRC, or brightly colored balls, can be done with simpler - and faster - techniques.
+</p>
+
+<p>
+In this example, we are going to write a program that can detect the goals used in the 2017 FRC game, which I wrote a accurate and resilient
+detection system for.
+</p>
+
+<p>
+The first thing to do is to make the target as visible as possible. Since it has retroreflective tape, a simple way to make the target stand out
+is to shine the brightest LED we can find at it from right next to the camera.
+<p>
+
+<table>
+  <tr>
+    <td><code>p</code></td>
+    <td>toggle headlights</td>
+  </tr>
+</table>
+
+<p>
+OpenCV includes several functions for finding the size and shape of a detected object. To use them, we need to find the objects in the image. The
+best way to do this is to find all the regions of bright green. This will detect some things besides the target, but they are easier to remove later
+in processing. This is done with the function <pre>cv.inrange</pre>, which uses an upper and lower bound for each channel (for example, in RGB, pixels
+could be rejected because of too much red, not enough red, etc). This requires the image to be in the necessary format already.
+</p>
+
 <p>
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. In massa tempor nec feugiat. Enim nec dui nunc mattis enim ut tellus elementum sagittis. Erat imperdiet sed euismod nisi porta lorem mollis. Amet consectetur adipiscing elit ut aliquam. Sed lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt. Euismod quis viverra nibh cras pulvinar. Sed risus pretium quam vulputate dignissim suspendisse in est. Aliquam ut porttitor leo a diam sollicitudin tempor id. Tincidunt eget nullam non nisi est. Purus gravida quis blandit turpis cursus in hac habitasse. Consectetur adipiscing elit ut aliquam purus sit amet luctus venenatis. Amet facilisis magna etiam tempor orci eu. Vitae proin sagittis nisl rhoncus mattis rhoncus. Nam aliquam sem et tortor consequat id porta nibh. Felis eget velit aliquet sagittis id consectetur purus. Eget sit amet tellus cras adipiscing enim eu turpis egestas.
 </p>

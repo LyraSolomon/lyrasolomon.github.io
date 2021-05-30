@@ -64,21 +64,18 @@ function mkBasketBot(id, scoreboardId, feedId, codeId) {
   var feed = document.getElementById(feedId);
   var code = document.getElementById(codeId);
   var height = feed.clientHeight;
-  console.log(height);
   var width = feed.clientWidth;
   document.getElementById(id).innerHTML = '<canvas id="'+idInner+'" width="'+width+'" height="'+height+'" z-index="0">HTML5 not supported!</canvas>';
   var scoreboard = document.getElementById(scoreboardId);
 
   var feedIdInner = feedId + "-inner";
   document.getElementById(feedId).innerHTML = '<canvas id="'+feedIdInner+'" width="'+width+'" height="'+height+'" z-index="0">HTML5 not supported!</canvas>';
-  console.log(height);
 
   visionThread.onmessage = function(e) {
     if (e.data == "ready") {
       visionLoaded = true;
     } else {
       document.getElementById(feedIdInner).getContext("2d").putImageData(e.data[0], 0, 0);
-      //console.log("return", /*(new Date()).getTime()-*/e.data[1]);
     }
   };
 
@@ -129,14 +126,26 @@ function runAnimation(scoreboard, feed, code) {
       }
       if (launch) {
         launch = false;
-        vForward = 3.50;
+        var offset = Math.random() * 0.24 - 0.12;
+        var error = Math.random() * 0.05;
+        var speed = 7.83 + Math.random() * 0.2 - 0.1;
+        var error_direction = Math.random() * Math.PI * 2;
+        var vForward = speed * Math.cos(1.107 + Math.sin(error_direction) * error);
+        var vSide = speed * Math.sin(Math.cos(error_direction) * error);
+        var vUp = speed * Math.sin(1.107 + Math.sin(error_direction) * error);
         if (forward) {
           vForward += 4;
         }
         if (backward) {
           vForward -= 4;
         }
-        balls.push([x + Math.sin(theta) * 0.408, 0.560, z + Math.cos(theta) * 0.408, -Math.sin(theta) * vForward, 7.00, -Math.cos(theta) * vForward, true]);
+        balls.push([x + Math.sin(theta) * 0.408 + Math.cos(theta) * offset,
+                    0.560,
+                    z + Math.cos(theta) * 0.408 - Math.sin(theta) * offset,
+                    -Math.sin(theta) * vForward + Math.cos(theta) * vSide,
+                    vUp,
+                    -Math.cos(theta) * vForward - Math.sin(theta) * vSide,
+                    true]);
       }
       for (var ball of balls) {
         ball[4] -= 0.01 * 9.81;
@@ -165,11 +174,9 @@ function runAnimation(scoreboard, feed, code) {
       scoreboard.innerHTML = "Hits: " + hits + "<br/>Misses: " + misses;
 
       if (visionLoaded) {
-        //console.log(x);
         var t0 = (new Date()).getTime();
         mockCanvas.getContext("2d").drawImage(gl.canvas, 0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
         var imageData = mockCanvas.getContext("2d").getImageData(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-        //feed.contentWindow.postMessage([imageData, code.value], "*");
         visionThread.postMessage([imageData, code.value, x]);
       }
     }, 10);
